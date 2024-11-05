@@ -1,4 +1,4 @@
 section_id,module_id,section_title,section_content,section_type,created_at,updated_at
-101,1,what is investing?,"Investing is putting your money into something (like a business, stock, or real estate)with the hope that it will grow over time and give you back more money.",info,11/4/2024,
-201,2,stocks,"When you buy stocks, you own part of a company, gaining returns through dividends and potential stock price increases",info,11/5/2024
-202,2,bonds,"Buying bonds means lending money to a company or government, earning returns through interest payments and principal repayment.",info,11/5/
+101,1,what is investing?,"Investing is putting your money into something (like a business, stock, or real estate)with the hope that it will grow over time and give you back more money.",info,11/4/2024,11/5/2024
+201,2,stocks,"When you buy stocks, you own part of a company, gaining returns through dividends and potential stock price increases",info,11/5/2024,
+202,2,bonds,"Buying bonds means lending money to a company or government, earning returns through interest payments and principal repayment.",info,11/5/2024,
