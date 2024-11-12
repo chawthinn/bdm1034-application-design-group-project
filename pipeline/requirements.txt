@@ -1,1 +1,5 @@
 # Astro Runtime includes the following pre-installed providers packages: https://www.astronomer.io/docs/astro/runtime-image-architecture#provider-packages
+yfinance==0.2.36
+pandas==2.1.4
+pymongo==3.11.4
+pytz>=2022.5
