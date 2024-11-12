@@ -6,7 +6,7 @@ import shutil
 import os
 
 # Set up logging for monitoring
-logging.basicConfig(filename='pipeline.log', level=logging.INFO,
+logging.basicConfig(filename='pipeline.com', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Monitoring function to log metrics
@@ -15,9 +15,11 @@ def log_metric(metric_name, value):
 
 # Create SparkSession with additional memory allocation and settings for better performance
 spark = SparkSession.builder \
-    .appName("Pipeline") \
-    .config("spark.executor.memory", "4g") \
-    .config("spark.driver.memory", "2g") \
+    .appName("PipelineDataPipeline") \
+    .config("spark.executor.memory", "6g") \
+    .config("spark.driver.memory", "4g") \
+    .config("spark.sql.shuffle.partitions", "100") \
+    .config("spark.default.parallelism", "100") \
     .getOrCreate()
 
 # Set logging level to WARN to reduce verbosity
@@ -165,15 +167,15 @@ def data_pipeline():
         # Ensure Spark session is stopped to release resources
         spark.stop()
         # Clean up temporary directories if they still exist
-        # temp_dir = "C:/Users/vijay/spark_temp_dir"
-        # if os.path.exists(temp_dir):
-        #     try:
-        #         shutil.rmtree(temp_dir)
-        #         log_metric("Temporary Directory Cleanup", "Success")
-        #     except FileNotFoundError:
-        #         log_metric("Temporary Directory Cleanup", "Directory already removed by Spark")
-        #     except Exception as e:
-        #         log_metric("Temporary Directory Cleanup Error", str(e))
+        temp_dir = "C:/Users/vijay/spark_temp_dir"
+        if os.path.exists(temp_dir):
+            try:
+                shutil.rmtree(temp_dir)
+                log_metric("Temporary Directory Cleanup", "Success")
+            except FileNotFoundError:
+                log_metric("Temporary Directory Cleanup", "Directory already removed by Spark")
+            except Exception as e:
+                log_metric("Temporary Directory Cleanup Error", str(e))
 
 # Run the data pipeline
 data_pipeline()
