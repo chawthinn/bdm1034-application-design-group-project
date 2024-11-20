@@ -1,0 +1,43 @@
+Project Board Overview
+The project board is divided into the following columns (or lists):
+1.	Backlog
+o	This column stores all tasks, ideas, and features that are yet to be prioritized.
+o	It's the starting point for new tasks, including user stories, bugs, enhancements, and technical debt.
+o	The team can regularly review the backlog to decide what items should be tackled next.
+Details:
+o	Task Type: Feature, Bug, Enhancement, etc.
+o	Priority: Low, Medium, High, Critical.
+o	Story Points or Effort Estimate (if using Scrum).
+o	Acceptance Criteria: Clearly defined outcomes for the task.
+2.	To Do (Sprint Ready)
+o	This column includes tasks selected for the current sprint or work cycle.
+o	These tasks are prioritized and refined, with all necessary details filled out.
+o	The team is ready to start working on these items.
+Details:
+o	Task Owner: Assigned to a specific team member.
+o	Due Date: Expected completion time.
+o	Dependencies: Other tasks or blockers that might impact progress.
+3.	In Progress
+o	This column represents tasks actively being worked on.
+o	Tasks should be moved here when a team member begins working on them.
+o	This column helps track current workloads and prevent task overload.
+Details:
+o	Status: Actively worked on or awaiting external input.
+o	Subtasks: Smaller actionable items breaking down the main task.
+o	Time Tracking: Start date and ongoing time spent.
+4.	In Review / Testing
+o	Completed tasks are moved here for review, testing, or quality assurance (QA).
+o	Code reviews, testing procedures, or stakeholder feedback take place at this stage.
+o	This stage helps ensure all deliverables meet quality standards before completion.
+Details:
+o	Reviewer: Assigned person responsible for testing or review.
+o	Feedback: Comments or suggestions from the reviewer.
+o	Test Cases: Details of test scenarios and results.
+5.	Done
+o	Tasks that have passed the review stage and are considered complete.
+o	The team can regularly reflect on these tasks for progress tracking and retrospective meetings.
+Details:
+o	Completion Date: Date when the task was completed.
+o	Links: Associated documents, code commits, or deliverable files.
+o	Comments: Any final notes or documentation updates.
+
