@@ -21,7 +21,7 @@ def is_market_open():
 # Default arguments for the DAG
 default_args = {
     'owner': 'airflow',
-    'retries': 0,
+    'retries': 3,
     'retry_delay': timedelta(minutes=5),
     'email_on_failure': False,
     'email_on_retry': False,
@@ -30,7 +30,7 @@ default_args = {
 @dag(
     default_args=default_args,
     description='Collect real-time stock data and save to MongoDB',
-    schedule_interval='*/15 * * * *',  # Every 15 minutes
+    schedule_interval='*/5 * * * *',# Every 5 minutes
     start_date=days_ago(1),
     catchup=False,
     tags=['stocks', 'yfinance', 'mongodb', 'real-time']
