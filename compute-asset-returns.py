@@ -7,6 +7,29 @@ from datetime import datetime, timedelta
 # Load environment variables from the .env file
 load_dotenv()
 
+# Function to check if returns already exist in asset_metadata
+def check_if_returns_exist(mongo_uri, database_name, collection_name, asset_name, field="YTD"):
+    """
+    Check if a specific return field exists for an asset in the metadata collection.
+
+    Args:
+        mongo_uri (str): MongoDB URI for connection.
+        database_name (str): Name of the database.
+        collection_name (str): Name of the metadata collection.
+        asset_name (str): Name of the asset (ticker).
+        field (str): Field to check (e.g., 'YTD').
+
+    Returns:
+        bool: True if the field exists, False otherwise.
+    """
+    client = MongoClient(mongo_uri)
+    db = client[database_name]
+    collection = db[collection_name]
+
+    # Check if the document exists with the specified field
+    existing_data = collection.find_one({"Ticker": asset_name}, {field: 1, "_id": 0})
+    return field in existing_data if existing_data else False
+
 # Function to fetch historical prices for a specific asset
 def fetch_historical_prices(mongo_uri, database_name, collection_name, asset_name):
     """
@@ -119,6 +142,11 @@ if __name__ == "__main__":
 
     for ticker in distinct_tickers:
         print(f"Processing {ticker}...")
+
+        # Check if YTD data already exists
+        if check_if_returns_exist(MONGO_URI, "robo_advisor", "asset_metadata", ticker, field="YTD"):
+            print(f"YTD data already exists for {ticker}. Skipping calculation.")
+            continue
 
         # Fetch historical prices
         hist_prices = fetch_historical_prices(MONGO_URI, "robo_advisor", "historical_prices", ticker)
