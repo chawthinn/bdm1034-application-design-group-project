@@ -93,7 +93,7 @@ def fetch_historical_prices(mongo_uri, database_name, collection_name, asset_nam
     # Convert to DataFrame
     df = pd.DataFrame(data)
     df['Date'] = pd.to_datetime(df['Date'])  # Ensure 'Date' is a datetime object
-    df['Close'] = pd.to_numeric(df['Close'], errors='coerce')  # Convert 'Close' to numeric
+    df['Close'] = pd.to_numeric(df['Close'].replace('[\$,]', '', regex=True), errors="coerce")  # Strip '$' and convert
     df.sort_values(by='Date', inplace=True)  # Sort by date
     return df
 

@@ -1,6 +1,7 @@
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
+import pandas as pd
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -25,9 +26,17 @@ def check_if_risk_adjusted_returns_exist(mongo_uri, database_name, collection_na
     collection = db[collection_name]
     fields = fields or ["Risk_Adjusted_YTD", "Risk_Adjusted_1Y"]
 
-    # Query to check if all specified fields exist and are not null
+    # Query to check if all specified fields exist and are not null or NaN
     existing_data = collection.find_one({"Ticker": asset_name}, {field: 1 for field in fields})
-    return all(field in existing_data and existing_data[field] is not None for field in fields) if existing_data else False
+    
+    # Check if any field is missing or contains None or NaN
+    if existing_data:
+        for field in fields:
+            # Check if the field exists and its value is neither None nor NaN
+            if field not in existing_data or pd.isna(existing_data[field]):
+                return False
+        return True
+    return False
 
 # Function to fetch returns and volatility for a specific asset
 def fetch_returns_and_volatility(mongo_uri, database_name, collection_name, asset_name):
