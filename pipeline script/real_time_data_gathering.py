@@ -33,6 +33,7 @@ def gather_realtime_data(assets, interval=900):
 
             # Append data to CSV file
             df = pd.DataFrame([price_data])
+            # FIXE-ME: Save the data frame to MongoDB Atlas instead of CSV
             df.to_csv("realtime_price_data.csv", mode='a', header=not pd.io.common.file_exists("realtime_price_data.csv"), index=False)
             print(f"Real-time data collected and saved at {current_time}")
         else:
