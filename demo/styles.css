@@ -1,0 +1,27 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333333;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+    color: #0056b3;
+}
+
+.stButton>button {
+    background-color: #0056b3;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.stButton>button:hover {
+    background-color: #003d80;
+}
+
+.stSidebar .css-1d391kg {
+    background-color: #f8f9fa;
+}
