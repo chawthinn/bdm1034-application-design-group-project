@@ -1,4 +1,4 @@
-**# bdm1034-application-design-group-project
+# bdm1034-application-design-group-project
 
 **Overview**
 This project is a robo-advisor platform aimed at guiding beginner investors investing in a personalized investment portfolio based on their financial goals, risk tolerance, and investment horizon. The platform uses data-driven insights and portfolio optimization techniques to create tailored recommendations, helping users understand and manage their investments.
