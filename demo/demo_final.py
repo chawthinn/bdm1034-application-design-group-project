@@ -6,12 +6,12 @@ import pickle
 import logging
 import plotly.express as px
 
-# Load the trained K-Means model
-model_filename = "kmeans_model.pkl"
-with open(model_filename, "rb") as file:
-    kmeans = pickle.load(file)
+# # Load the trained K-Means model
+# model_filename = "kmeans_model.pkl"
+# with open(model_filename, "rb") as file:
+#     kmeans = pickle.load(file)
 
-logging.info("Trained K-Means model loaded successfully.")
+# logging.info("Trained K-Means model loaded successfully.")
 
 # Streamlit App Configuration
 st.set_page_config(
