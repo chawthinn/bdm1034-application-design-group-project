@@ -6,6 +6,9 @@ import pickle
 import logging
 import plotly.express as px
 
+# Set up logging to capture information in the app
+logging.basicConfig(level=logging.INFO)
+
 # Load the trained K-Means model
 model_filename = "kmeans_model.pkl"
 with open(model_filename, "rb") as file:
@@ -59,8 +62,13 @@ data["Cluster"] = kmeans.predict(data_scaled)
 with tab2:
     st.header("Suggested Portfolio")
 
-    # Example: Filter Portfolio Recommendations
-    recommended_portfolio = data.groupby("Cluster").head(5)  # Top 5 recommendations per cluster
+    # Example: Filter Portfolio Recommendations (top 10)
+    recommended_portfolio = data.groupby("Cluster").head(10)  # Top 10 recommendations per cluster
+
+    # Logging the recommended portfolio information
+    logging.info("Recommended Portfolio:")
+    logging.info(recommended_portfolio[["Beta", "Alpha", "Cluster"]])
+
     st.subheader("Recommended Portfolio:")
     st.dataframe(recommended_portfolio[["Beta", "Alpha", "Cluster"]])
 
@@ -73,17 +81,12 @@ with tab2:
     )
     st.plotly_chart(fig)
 
-# Tab 3: Data Insights
-with tab3:
-    st.header("Data Insights")
-
-    # Summary Stats
-    st.subheader("Statistical Summary")
-    st.write(data.describe())
-
-    # Visualization: Risk Category Distribution
-    fig = px.histogram(
-        data, x="Cluster", title="Distribution of Clusters",
-        labels={"Cluster": "Cluster Label"}
+    # Simple Pie Chart for Cluster Distribution (Portfolio Sizes)
+    cluster_counts = data["Cluster"].value_counts()
+    pie_fig = px.pie(
+        names=cluster_counts.index,
+        values=cluster_counts.values,
+        title="Portfolio Size Distribution by Cluster",
+        labels={"value": "Cluster Size", "names": "Cluster"}
     )
-    st.plotly_chart(fig)
+    st.plotly_chart(pie_fig)

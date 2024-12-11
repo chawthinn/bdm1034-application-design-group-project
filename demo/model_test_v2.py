@@ -51,9 +51,9 @@ for feature in required_features:
 
 # Add Synthetic User Features
 logging.info("Adding synthetic user data...")
-user_age = 80
-investment_amount = 100000
-investment_duration = 20
+user_age = 50
+investment_amount = 50000
+investment_duration = 7
 
 data["User_Age"] = user_age
 data["Investment_Amount"] = investment_amount
@@ -105,12 +105,3 @@ portfolio = create_portfolio(data, preferred_risk_category)
 
 logging.info("Recommended Portfolio:")
 print(portfolio[["Ticker", "Category", "Risk_Category"]])
-
-import pickle
-
-# Save the trained K-Means model
-model_filename = "kmeans_model.pkl"
-with open(model_filename, "wb") as file:
-    pickle.dump(kmeans, file)
-
-logging.info(f"Trained K-Means model saved to {model_filename}")
