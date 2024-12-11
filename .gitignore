@@ -47,7 +47,7 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
-
+.env
 # MyPy
 .mypy_cache/
 .dmypy.json
