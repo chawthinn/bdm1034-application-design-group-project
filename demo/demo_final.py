@@ -1,99 +1,82 @@
 import streamlit as st
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
-import joblib
-import logging
+import numpy as np
+import pickle
+from sklearn.metrics import silhouette_score
+from pymongo import MongoClient
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+# Load pre-trained models
+with open('kmeans_model.pkl', 'rb') as f:
+    kmeans = pickle.load(f)
 
-# Load Resources
-@st.cache_resource
-def load_resources():
-    """Load the K-Means model and Scaler."""
-    kmeans_model = joblib.load("kmeans_model.pkl")
-    scaler = joblib.load("scaler.pkl")
-    logging.info("Resources loaded successfully.")
-    return kmeans_model, scaler
+with open('scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
 
-# Landing Page
-def landing_page():
-    st.title("Robo Advisor - User Portfolio Recommendation")
-    st.subheader("Personalized investment insights at your fingertips.")
-    st.write(
-        """
-        Welcome to Robo Advisor, where data-driven machine learning meets personalized investment strategies.
-        
-        ### Features:
-        - **Cluster-based portfolio recommendations**
-        - **Insightful analysis and tracking tools**
-        - **Easy-to-use interface for investors of all levels**
-        
-        Explore the app using the tabs above.
-        """
-    )
+# MongoDB connection details
+mongo_uri = "mongodb+srv://user1:12345@cluster0.s5hw0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+database_name = "robo_advisor"
+input_collection_name = "advanced_feature_engineered_data"
 
-# Portfolio Optimization
-def portfolio_page(kmeans_model, scaler):
-    st.title("Portfolio Optimization")
-    st.subheader("Get your personalized portfolio recommendations.")
+# Connect to MongoDB
+client = MongoClient(mongo_uri)
+db = client[database_name]
+input_collection = db[input_collection_name]
 
-    # User Inputs
-    user_age = st.number_input("Enter your age:", min_value=18, max_value=100, step=1)
-    investment_amount = st.number_input("Enter your investment amount ($):", min_value=1000, step=1000)
-    investment_duration = st.number_input("Enter your investment duration (years):", min_value=1, step=1)
+# Streamlit App Title
+st.title("Stock Clustering and Investment Advisor")
 
-    if st.button("Generate Portfolio"):
-        try:
-            # Fetch real data (Replace with database call if needed)
-            data = pd.read_csv("real_data.csv")  # Ensure `real_data.csv` exists and contains the necessary features
+# User Inputs
+age = st.number_input("Enter your age:", min_value=18, max_value=100, step=1)
+investment_amount = st.number_input("Enter your investment amount ($):", min_value=1000, step=100)
+investment_duration = st.number_input("Enter investment duration (years):", min_value=1, max_value=50, step=1)
 
-            # Add user-specific features
-            data["User_Age"] = user_age
-            data["Investment_Amount"] = investment_amount
-            data["Investment_Duration"] = investment_duration
+if st.button("Analyze and Cluster"):
+    # Load data from MongoDB
+    data = pd.DataFrame(list(input_collection.find()))
 
-            # Preprocess data
-            required_features = [
-                "Beta", "Alpha", "Dividend_Yield", "10-Day Volatility", 
-                "User_Age", "Investment_Amount", "Investment_Duration"
-            ]
-            scaled_data = scaler.transform(data[required_features])
+    # Drop MongoDB-specific ID column
+    if "_id" in data.columns:
+        data.drop("_id", axis=1, inplace=True)
 
-            # Predict clusters
-            data["Cluster"] = kmeans_model.predict(scaled_data)
+    # Required Features
+    required_features = ['Beta', 'Alpha', 'Dividend_Yield', '10-Day Volatility']
 
-            # Display cluster assignments
-            st.subheader("Cluster Assignments")
-            st.write(data[["Cluster"] + required_features].head())
+    # Calculate missing features
+    if "Daily Return" not in data.columns:
+        st.info("Calculating 'Daily Return' feature...")
+        data["Daily Return"] = (data["Close"] - data["Open"]) / data["Open"]
 
-            # Display cluster insights (Example logic, customize as needed)
-            st.subheader("Cluster Insights")
-            for cluster in data["Cluster"].unique():
-                cluster_data = data[data["Cluster"] == cluster]
-                st.write(f"Cluster {cluster} Summary:")
-                st.write(cluster_data.describe())
+    if "10-Day Volatility" not in data.columns:
+        st.info("Calculating '10-Day Volatility' feature...")
+        data["10-Day Volatility"] = data["Daily Return"].rolling(window=10).std()
 
-        except Exception as e:
-            st.error(f"Error generating portfolio: {e}")
+    # Check and preprocess data
+    for feature in required_features:
+        if feature not in data.columns:
+            st.error(f"Missing feature: {feature}")
+            st.stop()
 
-# Progress Tracking
-def progress_page():
-    st.title("Investment Progress")
-    st.subheader("Track your journey and monitor performance.")
-    st.info("This feature is under development. Stay tuned for updates!")
+    data = data[required_features].fillna(data.mean())
 
-# Main App
-def main():
-    kmeans_model, scaler = load_resources()
+    # Scale data
+    data_scaled = scaler.transform(data)
 
-    tab1, tab2, tab3 = st.tabs(["🏠 Home", "📈 Portfolio Optimization", "📊 Progress"])
-    with tab1:
-        landing_page()
-    with tab2:
-        portfolio_page(kmeans_model, scaler)
-    with tab3:
-        progress_page()
+    # Predict clusters
+    data['Cluster'] = kmeans.predict(data_scaled)
 
-if __name__ == "__main__":
-    main()
+    # Calculate Silhouette Score
+    sil_score = silhouette_score(data_scaled, data['Cluster'])
+
+    # Display Results
+    st.subheader("Clustering Results")
+    st.write(f"Silhouette Score: {sil_score:.2f}")
+    st.write(data)
+
+    # Tailored Recommendation
+    st.subheader("Investment Recommendation")
+    if age < 35 and investment_duration > 10:
+        st.write("You are in a prime investment phase. Consider aggressive portfolios (e.g., Cluster 2).")
+    elif 35 <= age <= 50:
+        st.write("A balanced portfolio might suit you better (e.g., Cluster 1).")
+    else:
+        st.write("Consider conservative options for steady growth (e.g., Cluster 0).")
