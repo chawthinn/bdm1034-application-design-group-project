@@ -1,0 +1,7 @@
+name: pipeline
+deployment:
+  cluster: us-central
+  image: quay.io/astronomer/astro-runtime:6.2.2  # Verifique a versão usada
+  environment:
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__EXECUTOR: 'CeleryExecutor'
