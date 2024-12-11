@@ -53,27 +53,6 @@ Welcome to our **Robo-Advisor Platform**! This project is designed to empower be
 
 ---
 
-## Tech Stack
-
-### **Backend**
-- **Python**: Core language powering backend functionality.
-- **Flask/Django**: Framework for API and web services.
-
-### **Data Processing and Analysis**
-- **NumPy & Pandas**: For data manipulation and processing.
-- **SciPy**: Portfolio optimization techniques.
-
-### **Financial Data Extraction**
-- **yFinance**: Seamless access to up-to-date financial market data.
-
-### **Data Visualization**
-- **Matplotlib & Plotly**: For generating clear and interactive performance analytics.
-
-### **Machine Learning (if applicable)**
-- **Scikit-Learn**: For advanced data modeling and analysis.
-
----
-
 ## Setup and Installation
 
 ### Prerequisites
